@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>3D Pink Book Experience</title>
+    <style>
+        body { margin: 0; background-color: #ffc0cb; overflow: hidden; }
+        #instruction {
+            position: absolute; top: 20px; width: 100%; text-align: center;
+            font-family: sans-serif; color: #d63384; pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="instruction">Click the book to open/close</div>
+    
+    <script type="importmap">
+        { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+
+        // 1. Scene Setup
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xffc0cb); // Pink Background
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // 2. Lights
+        const light = new THREE.DirectionalLight(0xffffff, 1);
+        light.position.set(5, 5, 5);
+        scene.add(light);
+        scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+
+        // 3. Create the Book Group
+        const book = new THREE.Group();
+        scene.add(book);
+
+        // Back Cover (Static)
+        const backCoverGeo = new THREE.BoxGeometry(2, 3, 0.1);
+        const coverMat = new THREE.MeshPhongMaterial({ color: 0xd63384 });
+        const backCover = new THREE.Mesh(backCoverGeo, coverMat);
+        backCover.position.z = -0.1;
+        book.add(backCover);
+
+        // Pages (The "Block")
+        const pagesGeo = new THREE.BoxGeometry(1.9, 2.9, 0.2);
+        const pagesMat = new THREE.MeshPhongMaterial({ color: 0xffffeb });
+        const pages = new THREE.Mesh(pagesGeo, pagesMat);
+        book.add(pages);
+
+        // Front Cover (Pivotable)
+        const frontCoverGroup = new THREE.Group();
+        frontCoverGroup.position.x = -1; // Set pivot point to the spine
+        book.add(frontCoverGroup);
+
+        const frontCover = new THREE.Mesh(backCoverGeo, coverMat);
+        frontCover.position.x = 1; // Offset back so it aligns with pages
+        frontCover.position.z = 0.1;
+        frontCoverGroup.add(frontCover);
+
+        camera.position.z = 5;
+        book.rotation.x = 0.2;
+        book.rotation.y = -0.3;
+
+        // 4. Interaction Logic
+        let isOpen = false;
+        window.addEventListener('mousedown', () => {
+            isOpen = !isOpen;
+        });
+
+        // 5. Animation Loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Smooth rotation for the cover
+            const targetRotation = isOpen ? -Math.PI + 0.5 : 0;
+            frontCoverGroup.rotation.y = THREE.MathUtils.lerp(frontCoverGroup.rotation.y, targetRotation, 0.1);
+            
+            // Gentle floating effect
+            book.position.y = Math.sin(Date.now() * 0.002) * 0.1;
+            book.rotation.y += 0.005;
+
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Handle Resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
