@@ -70,11 +70,60 @@ body {
     padding: 20px;
 }
 .lõputekst {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 56px 44px 42px;
     text-align: center;
-    line-height: 1.5;
+    color: #d63384;
+    font-family: 'Cursive', 'Comic Sans MS', sans-serif;
+    background: pink;
+}
+
+.closing-title {
+    margin: 0;
+    font-size: 40px;
+    letter-spacing: 3px;
+    font-weight: 500;
+}
+
+.closing-signature {
+    margin: 50px 0 0;
+    padding: 12px 24px;
+    border-top: 2px solid #d63384;
+    border-bottom: 2px solid #d63384;
+    font-size: 33px;
+    letter-spacing: 2px;
+}
+
+.closing-author {
+    margin: 0;
     font-size: 28px;
-    font-family: 'sans-serif';
-    color: black;
-    transition: transform 1 ease;
-    padding: 20px;
+    letter-spacing: 1px;
+}
+
+.closing-message {
+    margin: 150px 0 0;
+    font-size: 27px;
+    letter-spacing: 0.5px;
+    max-width: 90%;
+}
+
+.closing-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-top: auto;
+}
+
+.closing-date {
+    margin: 0;
+    font-size: 28px;
+    letter-spacing: 1px;
 }
